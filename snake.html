@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id='body'>
+    
+    <canvas id="gc" width="475" height="475" style="background-color: black;"></canvas>
+
+    <script>
+
+        const canvas = document.getElementById('gc');
+        let ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FF0000';
+        let grow = false, shrink = false;
+        let current;
+        let last;
+        const appleControl = () => {
+            appleX = Math.floor(Math.random()*18+1)*25;
+            appleY = Math.floor(Math.random()*18+1)*25;
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(appleX, appleY, 25, 25);
+
+            for (let i = 0; i < body.length; i++) {
+                if (appleX === body[i][0] && appleY === body[i][1]) {
+                        appleControl();
+                }
+            }
+        }
+
+                function setControl() {
+                    window.control = (e) => {
+
+                    control = () => {};
+
+                    current = e.which;
+
+                    switch (true) {
+                        case (current - last === 2 || current - last === -2):
+                            dir = last;
+                            break;
+                        case (e.which === 38):
+                            dir = 38;
+                            last = e.which;
+                            break;
+                        case (e.which === 40):
+                            dir = 40;
+                            last = e.which;
+                            break;
+                        case (e.which === 37):
+                            dir = 37;
+                            last = e.which;
+                            break;
+                        case (e.which === 39):
+                            dir = 39;
+                            last = e.which;
+                    }
+                    }
+                }
+                setControl();
+
+        let x = y = 225, appleX, appleY, dir;
+        let body = [[x, y]];
+        document.querySelector('#body').addEventListener('keydown', (e) => {
+
+            control(e);
+
+        });
+
+        appleControl();
+
+        setInterval(() => {
+            ctx.clearRect(body[0][0], body[0][1], 25, 25);
+            body.shift();
+            
+             if (x === appleX && y === appleY) {
+                appleControl();
+                grow = true;
+             }
+
+            switch (true) {
+                case (dir === 38):
+                    y -= 25;
+                    break;
+                case (dir === 40):
+                    y += 25;
+                    break;
+                case (dir === 37):
+                    x -= 25;
+                    break;
+                case (dir === 39):
+                    x += 25;
+            }
+
+            if (x < 0) {
+                x = 450;
+            } else if (x > 450) {
+                x = 0;
+            } else if (y < 0) {
+                y = 450;
+            } else if (y > 450) {
+                y = 0;
+            }
+
+            for (let i = 0; i < body.length; i++) {
+                if (x === body[i][0] && y === body[i][1]) {
+                    shrink = true;
+                }
+            }
+
+            body.push([x, y]);
+            if (grow) {
+                body.unshift([body[0][0], body[0][1]]);
+                grow = false;
+            } else if (shrink) {
+                for (let i = body.length - 2; i >= 0; i--) {
+                ctx.clearRect(body[i][0], body[i][1], 25, 25);
+                }
+                body = [[x, y]];
+                shrink = false;
+            }
+            for (let i = body.length - 1; i >= 0; i--) {
+                ctx.fillStyle = '#00FF00';
+                ctx.fillRect(body[i][0], body[i][1], 25, 25);
+            }
+
+            setControl();
+
+        },100);
+
+    </script>
+</body>
+</html>

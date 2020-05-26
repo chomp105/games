@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-7">
+    <title>tic tac toe
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+    <style>
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        top: 50vh;
+        left: 50vw;
+      }
+      .row {
+        float: left;
+      }
+      .row div {
+        border: 5px solid black;
+        border-left: none;
+        border-top: none;
+        width: 13vw;
+        height: 13vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4vw;
+        font-family: 'Cutive Mono', monospace;
+        font-weight: 900;
+      }
+      .row div:last-of-type {
+        border-bottom: none;
+      }
+      .row:last-of-type div {
+        border-right: none;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <div class="container">
+      <div class="row">
+        <div id="1" onclick="place(this.id)">
+        </div>
+        <div id="2" onclick="place(this.id)">
+        </div>
+        <div id="3" onclick="place(this.id)">
+        </div>
+      </div>
+      <div class="row">
+        <div id="4" onclick="place(this.id)">
+        </div>
+        <div id="5" onclick="place(this.id)">
+        </div>
+        <div id="6" onclick="place(this.id)">
+        </div>
+      </div>
+      <div class="row">
+        <div id="7" onclick="place(this.id)">
+        </div>
+        <div id="8" onclick="place(this.id)">
+        </div>
+        <div id="9" onclick="place(this.id)">
+        </div>
+      </div>
+    </div>                 
+    <script>
+      var winner = false;
+      var player = 'X';
+      var square = 0;
+      var b = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      function place(id) {
+        square = parseInt(id);
+        if (player === 'X' && b[square - 1] === 0) {
+            b[square - 1] = 1;
+            document.getElementById(id).innerHTML = player;
+            player = 'O';
+        } else if (player === 'O' && b[square - 1] === 0) {
+            b[square - 1] = 2;
+            document.getElementById(id).innerHTML = player;
+            player = 'X';
+        } else {
+            alert('you cant play there');
+        }
+        check();
+      }
+      function input(A, B, C) {
+        return b[A] != 0 && b[A] == b[B] && b[A] == b[C];
+      }
+      function check() {
+        switch(true) {
+          case (input(0, 1, 2)):
+            winner = true;
+            break;
+          case (input(3, 4, 5)):
+            winner = true;
+            break;
+          case (input(6, 7, 8)):
+            winner = true;
+            break;
+          case (input(0, 3, 6)):
+            winner = true;
+            break;
+          case (input(1, 4, 7)):
+            winner = true;
+            break;
+          case (input(2, 5, 8)):
+            winner = true;
+            break;
+          case (input(0, 4, 8)):
+            winner = true;
+            break;
+          case (input(6, 4, 2)):
+            winner = true;
+        }
+		if (winner === true) {
+        player === 'O' ? player = 'X' : player = 'O';
+        setTimeout(function() {
+          alert(player + ' is the winner');
+          location.reload();
+        }, 100);
+      }
+    }
+    </script>
+  </body>
+</html>

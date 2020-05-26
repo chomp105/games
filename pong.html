@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+</head>
+<body id="body">
+    
+    <canvas id="canvas" width="800" height="400" style="background: black"></canvas>
+
+    <script>
+
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let body = document.getElementById('body');
+        let p1y = 150, p2y = 150, p1x = 25, p2x = 750, bx = 200, by = 187.5, bxv = 5, byv = 3, change = false;
+
+            body.addEventListener('keydown', (e) => {
+                switch (e.which) {
+                    case 87:
+                        if (!(p1y <= 0)) {
+                        p1y -= 20;
+                        }
+                        break;
+                    case 83:
+                        if (!(p1y >= 300)) {
+                        p1y += 20;
+                        }
+                }
+            });
+
+        body.addEventListener('mousemove', (e) => {
+            if (!((e.clientY - 50) < 0) && !((e.clientY - 50) > 300)) {
+            p2y = e.clientY - 50;
+            }
+        });
+
+        setInterval(() => {
+            ctx.fillStyle = '#FFFFFF';
+
+            ctx.clearRect(25, 0, 25, 400);
+            ctx.clearRect(750, 0, 25, 400);
+
+            for (let i = 1; i < 16; i += 2) {
+                ctx.fillRect(387.5, i * 25 - 12.5, 25, 25);
+            }
+
+            ctx.fillRect(p1x, p1y, 25, 100);
+            ctx.fillRect(p2x, p2y, 25, 100);
+
+            ctx.clearRect(bx, by - 1, 25, 26);
+
+            if (change) {
+                if ((bx >= 50 || ((bx < 50 && bx > 25) && (by < p1y - 25 || by > p1y + 100))) || bx <= 25) {
+                    bx -= bxv; by -= byv;   
+                } else {
+                    bxv, byv = Math.floor( Math.random() * ((-byv + 1) - (-byv - 1) + 1) + (-byv - 1)), Math.floor(Math.random() * ((-bxv + 1) - (-bxv - 1) + 1) + (-bxv - 1));
+                    change = false;
+                }
+            } else {
+                if (((bx <= 725 || ((bx > 725 && bx < 750) && (by < p2y - 25 || by > p2y + 100))) || bx >= 750)) {
+                    bx += bxv; by += byv;
+                } else {
+                    bxv, byv = Math.floor( Math.random() * ((-byv + 1) - (-byv - 1) + 1) + (-byv - 1)), Math.floor(Math.random() * ((-bxv + 1) - (-bxv - 1) + 1) + (-bxv - 1));
+                    change = true;
+                }
+            }
+
+            if (by <= 0 || by >= 375) {
+                bxv, byv = -byv, -bxv;
+            } 
+
+            if (bx > 775) {
+                bx = 600, by = 187.5;
+                bxv = 5; byv = 3;
+                change = true;
+            } else if (bx < 0) {
+                bx = 200, by = 187.5;
+                bxv = 5; byv = 3;
+                change = false;
+            }
+
+            ctx.fillRect(bx, by, 25, 25);
+
+        },1000/80);
+
+    </script>
+</body>
+</html>
