@@ -1,0 +1,105 @@
+<canvas id="gc" width="570" height="720" style="background: black"></canvas>
+
+<script>
+let ctx = document.getElementById('gc').getContext('2d');
+let map = [
+  ['W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W'],
+  ['W',' ',' ',' ',' ',' ',' ',' ',' ','W',' ',' ',' ',' ',' ',' ',' ',' ','W'],
+  ['W',' ','W','W',' ','W','W','W',' ','W',' ','W','W','W',' ','W','W',' ','W'],
+  ['W',' ','W','W',' ','W','W','W',' ','W',' ','W','W','W',' ','W','W',' ','W'],
+  ['W',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','W'],
+  ['W',' ','W','W',' ','W',' ','W','W','W','W','W',' ','W',' ','W','W',' ','W'],
+  ['W',' ',' ',' ',' ','W',' ',' ',' ','W',' ',' ',' ','W',' ',' ',' ',' ','W'],
+  ['W','W','W','W',' ','W','W','W',' ','W',' ','W','W','W',' ','W','W','W','W'],
+  [' ',' ',' ','W',' ','W',' ',' ',' ',' ',' ',' ',' ','W',' ','W',' ',' ',' '],
+  [' ',' ',' ','W',' ','W',' ','W','W','-','W','W',' ','W',' ','W',' ',' ',' '],
+  ['W','W','W','W',' ','W',' ','W',' ',' ',' ','W',' ','W',' ','W','W','W','W'],
+  [' ',' ',' ',' ',' ',' ',' ','W',' ',' ',' ','W',' ',' ',' ',' ',' ',' ',' '],
+  ['W','W','W','W',' ','W',' ','W',' ',' ',' ','W',' ','W',' ','W','W','W','W'],
+  [' ',' ',' ','W',' ','W',' ','W','W','W','W','W',' ','W',' ','W',' ',' ',' '],
+  [' ',' ',' ','W',' ','W',' ',' ',' ',' ',' ',' ',' ','W',' ','W',' ',' ',' '],
+  ['W','W','W','W',' ','W',' ','W','W','W','W','W',' ','W',' ','W','W','W','W'],
+  ['W',' ',' ',' ',' ',' ',' ',' ',' ','W',' ',' ',' ',' ',' ',' ',' ',' ','W'],
+  ['W',' ','W','W',' ','W','W','W',' ','W',' ','W','W','W',' ','W','W',' ','W'],
+  ['W',' ',' ','W',' ',' ',' ',' ',' ','P',' ',' ',' ',' ',' ','W',' ',' ','W'],
+  ['W','W',' ','W',' ','W',' ','W','W','W','W','W',' ','W',' ','W',' ','W','W'],
+  ['W',' ',' ',' ',' ','W',' ',' ',' ','W',' ',' ',' ','W',' ',' ',' ',' ','W'],
+  ['W',' ','W','W','W','W','W','W',' ','W',' ','W','W','W','W','W','W',' ','W'],
+  ['W',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','W'],
+  ['W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W','W']
+];
+let dir = 0;
+let coords = [0, 0];
+
+function drawMap() {
+  ctx.clearRect(0, 0, 1000, 1000);
+  for (let i = 0; i < 24; i++) {
+    for (let j = 0; j < 19; j++) {
+      if (map[i][j] === 'W') {
+          ctx.fillStyle = 'blue';
+          ctx.fillRect(j * 30, i * 30, 30, 30);
+      } else if (map[i][j] === 'P') {
+          ctx.fillStyle = 'yellow';
+          ctx.fillRect(j * 30, i * 30, 30, 30);
+          coords = [i, j];
+      } else if (map[i][j] === '-') {
+          ctx.fillStyle = 'white';
+          ctx.fillRect(j * 30, i * 31.2, 30, 5);
+      }
+    }
+  }
+}
+
+function move() {
+  switch (dir) {
+    case 'W':
+      if (map[coords[0]][coords[1] - 1] != 'W') {
+        map[coords[0]][coords[1]] = ' ';
+        map[coords[0]][coords[1] - 1] = 'P';
+      }
+      if (coords[0] == 11 && coords[1] - 1 == -1) {
+        map[11][18] = 'P';
+      }
+      break;
+    case 'E':
+      if (map[coords[0]][coords[1] + 1] != 'W') {
+        map[coords[0]][coords[1]] = ' ';
+        map[coords[0]][coords[1] + 1] = 'P';
+      }
+      if (coords[0] == 11 && coords[1] + 1 == 19) {
+        map[11][0] = 'P';
+      }
+      break;
+    case 'N':
+      if (map[coords[0] - 1][coords[1]] != 'W') {
+        map[coords[0]][coords[1]] = ' ';
+        map[coords[0] - 1][coords[1]] = 'P';
+      }
+      break;
+    case 'S':
+      if (map[coords[0] + 1][coords[1]] != 'W') {
+        map[coords[0]][coords[1]] = ' ';
+        map[coords[0] + 1][coords[1]] = 'P';
+      }
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.which == 38 && map[coords[0] - 1][coords[1]] != 'W') {
+      dir = 'N';
+  } else if (e.which == 40 && map[coords[0] + 1][coords[1]] != 'W' && map[coords[0] + 1][coords[1]] != '-') {
+      dir = 'S';       
+  } else if (e.which == 37 && map[coords[0]][coords[1] - 1] != 'W') {
+      dir = 'W'; 
+  } else if (e.which == 39 && map[coords[0]][coords[1] + 1] != 'W') {
+      dir = 'E';       
+  }
+});
+
+function game() {
+  move();
+  drawMap();
+}
+
+setInterval(game, 1000/6);
+</script>
