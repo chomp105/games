@@ -1,0 +1,73 @@
+<canvas id="gc" width="600" height="600">
+
+<script>
+
+let ctx = document.getElementById("gc").getContext("2d");
+
+let cx = 0, cy = 0, r = 50;
+let x1 = 50, x2 = 70, y1 = 200, y2 = 300;
+
+document.addEventListener('mousemove', (e) => {
+  cx = e.clientX;
+  cy = e.clientY;
+});
+
+function pointCircle(x, y) {
+  let xlength = Math.max(cx, x) - Math.min(cx, x);
+  let ylength = Math.max(cy, y) - Math.min(cy, y);
+  let distance = Math.sqrt( (xlength * xlength) + (ylength * ylength));
+  if (distance < 50) return true;
+  return false;
+}
+
+function linePoint(closestX, closestY) {
+  if ((closestX > Math.min(x1, x2) && closestX < Math.max(x1, x2)) && (
+  closestY > Math.min(y1, y2) && closestY < Math.max(y1, y2))) return true;
+  return false;
+}
+
+function Check() {
+  
+  let inside1 = pointCircle(x1,y1, cx,cy,r);
+  let inside2 = pointCircle(x2,y2, cx,cy,r);
+  if (inside1 || inside2) return true;
+  
+  let distX = x1 - x2;
+  let distY = y1 - y2;
+  let len = Math.sqrt( (distX*distX) + (distY*distY) );
+  
+  let dot = ( ((cx-x1)*(x2-x1)) + ((cy-y1)*(y2-y1)) ) / Math.pow(len, 2);
+  // a . b / |b| ^ 2 
+  
+  let closestX = x1 + (dot * (x2-x1));
+  let closestY = y1 + (dot * (y2-y1));
+  
+  let onSegment = linePoint(closestX,closestY);
+  if (!onSegment) return false;
+  
+  distX = closestX - cx;
+  distY = closestY - cy;
+  let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+  
+  if (distance <= r) {
+    return true;
+  }
+  return false;
+}
+
+setInterval(() => {
+  ctx.clearRect(0, 0, 600, 600);
+  ctx.fillStyle = 'blue';
+  ctx.strokeStyle = 'red';
+  if (Check()) ctx.fillStyle = 'red';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 50, 0, 2 * Math.PI);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.fill();
+  ctx.stroke();
+},1000/60);
+
+</script>
+
+
